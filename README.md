@@ -10,6 +10,7 @@ Use
 ---
 
 Create a new Boxcar provider. This is free and can be done here: http://boxcar.io/site/providers
+
 Download and import my java class. Then use it as follow:
 
 Create a new instance of the class:
