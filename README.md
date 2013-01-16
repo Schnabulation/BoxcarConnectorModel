@@ -15,7 +15,7 @@ Download and import my java class. Then use it as follow:
 
 Create a new instance of the class:
 
-    BoxcarConnectorModel m = new BoxcarConnectorModel("your Boxcar Provider APIKey here");
+    BoxcarConnectorModel m = new BoxcarConnectorModel("your Boxcar Provider API Key here","your Boxcar Provider API Secret here);
 
 Send invitations to your Boxcar Provider as follow:
 
@@ -24,5 +24,9 @@ Send invitations to your Boxcar Provider as follow:
 Send notifications to already subscribed users as follow:
 
     m.sendMessage("reciever e-mail","message","your name");
+    
+Send notification to all subscribed users (broadcast) as follow:
+    
+    m.sendBroadcast("message","your name");
 
 That's it.
