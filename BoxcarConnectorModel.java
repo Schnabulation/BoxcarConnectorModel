@@ -1,5 +1,3 @@
-package ch.Schnabulation.JaMeSy;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -9,21 +7,27 @@ import java.net.URL;
 
 public class BoxcarConnectorModel {
 
-  private String message;
+	private String message;
 	private String sender;
 	private String reciever;
 	private String sendUrl;
 	private String inviteUrl;
+	private String broadUrl;
 	private HttpURLConnection connection;
 	private String body;
+	private String apiSecret;
 
-	public BoxcarConnectorModel(String apiKey) {
+	public BoxcarConnectorModel(String apiKey, String apiSecret) {
 
 		this.sendUrl = "http://boxcar.io/devices/providers/" + apiKey
 				+ "/notifications";
 		this.inviteUrl = "http://boxcar.io/devices/providers/" + apiKey
 				+ "/notifications/subscribe";
-
+		
+		this.broadUrl = "http://boxcar.io/devices/providers/" + apiKey
+				+ "/notifications/broadcast";
+		
+		this.apiSecret = apiSecret;
 		this.message = "";
 		this.sender = "";
 		this.reciever = "";
@@ -47,6 +51,15 @@ public class BoxcarConnectorModel {
 		this.writeToConnection();
 		this.closeConnection();
 	}
+	
+	public void sendBroadcast(String message, String sender) throws Exception {
+		this.message = message;
+		this.sender = sender;
+		
+		this.openConnection("broad");
+		this.writeToConnection();
+		this.closeConnection();
+	}
 
 	private void openConnection(String type) throws Exception {
 		if (type.equals("send")) {
@@ -58,6 +71,10 @@ public class BoxcarConnectorModel {
 			this.body = "email=" + reciever;
 			connection = (HttpURLConnection) this.getInviteUrl()
 					.openConnection();
+		} else if (type.equals("broad")) {
+			this.body = "secret=" + this.apiSecret + "&notification[from_screen_name]=" + sender
+					+ "&notification[message]=" + message;
+			connection = (HttpURLConnection) this.getBroadUrl().openConnection();
 		} else {
 			throw new Exception("Please say if you want to invite or to send");
 		}
@@ -95,5 +112,9 @@ public class BoxcarConnectorModel {
 
 	private URL getInviteUrl() throws MalformedURLException {
 		return new URL(this.inviteUrl);
+	}
+	
+	private URL getBroadUrl() throws MalformedURLException {
+		return new URL(this.broadUrl);
 	}
 }
